@@ -1,15 +1,15 @@
-from dataclasses import dataclass
-from typing import Any, List, Tuple
 import time
+import click
+import numpy
+
+from matplotlib import pyplot
+from datetime import datetime
+from collections import namedtuple
 from sys import stderr
 from logging import getLogger, INFO, Formatter, StreamHandler, basicConfig
 from pyautogui import size as screen_size, position as mouse_position, Point, Size
 from mysql import connector
-import click
-from datetime import datetime
-from collections import namedtuple
-import numpy
-from matplotlib import pyplot
+from typing import List, Tuple
 
 
 Scale = namedtuple("Scale", "width height")
@@ -109,8 +109,9 @@ def db_create_table(
         slog.warning(f"table `{table}` already exists")
     return db_handle
 
+
 def viz_vizdata(*, data) -> None:
-    pyplot.imshow(data, cmap='viridis')
+    pyplot.imshow(data, cmap="viridis")
     pyplot.title("Mouse cursor heatmap")
     pyplot.show()
 
@@ -235,14 +236,14 @@ def visualize(
         ],
         key=lambda x: x[0],
     )
-    
+
     slog.warning(
         f"processed {len(processed_data)} "
         f"entries in {time.time() - time_start} seconds"
     )
     time_start = time.time()
     freq_matrix = numpy.zeros((scale_height, scale_width), dtype=float)
-    for (_, point) in processed_data:
+    for _, point in processed_data:
         freq_matrix[int(point.y), int(point.x)] += 1
     freq_matrix /= freq_matrix.max()
     slog.warning(
